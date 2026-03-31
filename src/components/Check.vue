@@ -148,15 +148,17 @@
                 type="text"
                 v-model="apiUrl"
                 id="api_url"
-                name="api_url"
+                name="username"
+                autocomplete="username"
                 :placeholder="t('API_URL_PLACEHOLDER')"
               />
 
               <input
-                type="text"
+                type="password"
                 v-model="apiKey"
                 id="api_key"
-                name="api_key"
+                name="password"
+                autocomplete="current-password"
                 :placeholder="t('API_KEY_PLACEHOLDER')"
               />
 
