@@ -253,15 +253,6 @@
 
               <div class="left-icons">
                 <a-tooltip
-                  :title="t('CHAT')"
-                  placement="bottom"
-                  v-if="enableChat"
-                >
-                  <a @click="goChat()" class="icon-button">
-                    <MessageOutlined />
-                  </a>
-                </a-tooltip>
-                <a-tooltip
                   :title="
                     !testingComplete ? t('PLEASE_WAIT_FOR_TESTING') : t('SHARE')
                   "
@@ -322,11 +313,6 @@
                     </template>
                     <template v-else-if="column.dataIndex === 'model'">
                       <span style="display: flex; align-items: center">
-                        <MessageOutlined
-                          style="margin-right: 8px; cursor: pointer"
-                          @click="goChat(record.model)"
-                          v-if="enableChat"
-                        />
                         {{ record.model }}
                       </span>
                     </template>
@@ -498,184 +484,7 @@
       :destroyOnClose="true"
     >
       <a-tabs>
-        <a-tab-pane
-          key="1"
-          :tab="t('LOCAL_CACHE')"
-          style="overflow-x: hidden"
-          tabPosition="left"
-        >
-          <a-form @submit.prevent>
-            <a-row :gutter="16">
-              <a-col :span="16">
-                <a-form-item :label="t('API_URL')">
-                  <a-input
-                    v-model:value="settingsApiUrl"
-                    :placeholder="t('PLEASE_ENTER_API_URL')"
-                  >
-                    <template #prefix>
-                      <UserOutlined class="site-form-item-icon" />
-                    </template>
-                  </a-input>
-                </a-form-item>
-                <a-form-item :label="t('API_KEY')">
-                  <a-input
-                    v-model:value="settingsApiKey"
-                    :placeholder="t('PLEASE_ENTER_API_KEY')"
-                  >
-                    <template #prefix>
-                      <LockOutlined class="site-form-item-icon" />
-                    </template>
-                  </a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <div style="display: flex; height: 100%">
-                  <a-button
-                    type="primary"
-                    @click="saveToLocal"
-                    size="large"
-                    style="
-                      flex: 1;
-                      white-space: normal;
-                      word-break: break-word;
-                      height: 90%;
-                    "
-                  >
-                    {{ t('SAVE_TO_LOCAL_CACHE') }}
-                  </a-button>
-                </div>
-              </a-col>
-            </a-row>
-          </a-form>
-          <h3>{{ t('HISTORY_RECORDS') }}</h3>
-          <a-list
-            :data-source="localCacheList"
-            bordered
-            style="width: 100%"
-            item-layout="horizontal"
-            :style="localListStyle"
-          >
-            <template #renderItem="{ item }">
-              <a-list-item>
-                <div>
-                  <div>{{ item.name }}</div>
-                  <div style="font-size: smaller; color: gray">
-                    URL: {{ item.url }}
-                  </div>
-                  <div style="font-size: smaller; color: gray">
-                    API Key: {{ maskApiKey(item.apiKey) }}
-                  </div>
-                </div>
-                <template #actions>
-                  <a @click="loadLocalRecord(item.id)">{{ t('IMPORT') }}</a>
-                  <a @click="deleteLocalRecord(item.id)">{{ t('DELETE') }}</a>
-                </template>
-              </a-list-item>
-            </template>
-          </a-list>
-          <div style="margin-top: 16px">
-            <a-button @click="exportLocalCache" style="margin-right: 8px"
-              >{{ t('EXPORT') }}
-            </a-button>
-            <a-button @click="importLocalCache">{{ t('IMPORT') }}</a-button>
-          </div>
-        </a-tab-pane>
-        <a-tab-pane key="2" :tab="t('CLOUD_CACHE')" style="overflow-x: hidden">
-          <div v-if="!isCloudLoggedIn">
-            <a-form @submit.prevent>
-              <a-row :gutter="16" align="stretch">
-                <a-col :span="16">
-                  <a-form-item :label="t('CLOUD_URL')">
-                    <a-input
-                      v-model:value="cloudUrl"
-                      :placeholder="t('PLEASE_ENTER_CLOUD_URL')"
-                    >
-                      <template #prefix>
-                        <UserOutlined class="site-form-item-icon" />
-                      </template>
-                    </a-input>
-                  </a-form-item>
-                  <a-form-item :label="t('PASSWORD')">
-                    <a-input-password
-                      v-model:value="cloudPassword"
-                      :placeholder="t('PLEASE_ENTER_PASSWORD')"
-                    >
-                      <template #prefix>
-                        <LockOutlined class="site-form-item-icon" />
-                      </template>
-                    </a-input-password>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                  <a-button
-                    type="primary"
-                    @click="handleCloudLogin"
-                    size="large"
-                    style="
-                      width: 100%;
-                      height: 90%;
-                      white-space: normal;
-                      word-break: break-word;
-                    "
-                  >
-                    {{ t('LOGIN') }}
-                  </a-button>
-                </a-col>
-              </a-row>
-            </a-form>
-          </div>
-          <div v-else>
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 16px;
-              "
-            >
-              <span>{{ t('LOGGED_IN_TO_CLOUD', { url: cloudUrl }) }}</span>
-              <a-button type="primary" @click="handleCloudLogout">
-                {{ t('LOGOUT') }}
-              </a-button>
-            </div>
-            <a-list
-              :data-source="cloudDataList"
-              bordered
-              style="width: 100%"
-              item-layout="horizontal"
-              :style="cloudListStyle"
-            >
-              <template #renderItem="{ item }">
-                <a-list-item>
-                  <div>
-                    <div>{{ item.name }}</div>
-                    <div style="font-size: smaller; color: gray">
-                      URL: {{ item.url }}
-                    </div>
-                    <div style="font-size: smaller; color: gray">
-                      API Key: {{ maskApiKey(item.apiKey) }}
-                    </div>
-                  </div>
-                  <template #actions>
-                    <a @click="loadCloudRecord(item.id)">{{ t('IMPORT') }}</a>
-                    <a @click="deleteCloudRecord(item.id)">{{ t('DELETE') }}</a>
-                  </template>
-                </a-list-item>
-              </template>
-            </a-list>
-            <div style="margin-top: 16px">
-              <a-button @click="exportCloudCache" style="margin-right: 8px"
-                >{{ t('EXPORT') }}
-              </a-button>
-              <a-button @click="importCloudCache" style="margin-right: 8px"
-                >{{ t('IMPORT') }}
-              </a-button>
-              <a-button type="primary" @click="confirmSaveCloudData"
-                >{{ t('CONFIRM_SAVE') }}
-              </a-button>
-            </div>
-          </div>
-        </a-tab-pane>
+
         <a-tab-pane key="3" :tab="t('ABOUT')">
           <div style="padding: 12px">
             <a-row :gutter="[12, 12]" align="middle">
@@ -1188,8 +997,6 @@ const tableData = ref([]);
 const totalModels = ref(0);
 const completedModels = ref(0);
 const progressPercent = ref(0);
-const chatSite = ref('https://chat.crond.dev');
-const enableChat = ref(true);
 const showExperimentalFeatures = ref(false);
 const pagination = reactive({
   current: 1,
@@ -1266,14 +1073,15 @@ onMounted(() => {
   initializeTheme(isDarkMode);
   initializeLanguage(locale, currentLanguage);
   initConsole();
-  // 初始化本地缓存列表
-  const savedLocalDataList = localStorage.getItem('localCacheList');
-  if (savedLocalDataList) {
-    localCacheList.value = JSON.parse(savedLocalDataList);
-  } else {
-    localCacheList.value = [];
-  }
-  getQueryParams();
+  // 初始化
+  const owner = appInfo.owner;
+  const repo = appInfo.repo;
+  showAnnouncement();
+  checkForUpdates(appInfo.version, owner, repo, t).then((updateInfo) => {
+    if (updateInfo && updateInfo.hasUpdate) {
+      showUpdatePrompt(updateInfo);
+    }
+  });
 });
 
 onMounted(() => {
@@ -1343,12 +1151,6 @@ const getQueryParams = async () => {
       }
       if (settingsObj.concurrency) {
         modelConcurrency.value = settingsObj.concurrency;
-      }
-      if (settingsObj.chatSite) {
-        chatSite.value = settingsObj.chatSite;
-      }
-      if (settingsObj.closeChat) {
-        enableChat.value = false;
       }
       if (!settingsObj.closeAnnouncement) {
         showAnnouncement();
@@ -2266,49 +2068,8 @@ function showFunctionCallingResult(result) {
 
 // 云端缓存相关状态
 const isCloudLoggedIn = ref(false);
-const cloudUrl = ref('');
-const cloudPassword = ref('');
-let cloudAuthHeader = ''; // 存储 Authorization 头的值
-const cloudDataList = ref([]);
-
-const localListStyle = computed(() => {
-  if (localCacheList.value.length > 4) {
-    return { maxHeight: '320px', overflowY: 'auto' };
-  } else {
-    return {};
-  }
-});
-
-const cloudListStyle = computed(() => {
-  if (cloudDataList.value.length > 5) {
-    return { maxHeight: '420px', overflowY: 'auto' };
-  } else {
-    return {};
-  }
-});
-
-// 本地缓存相关状态
-const settingsApiUrl = ref('');
-const settingsApiKey = ref('');
-const localCacheList = ref([]);
-
-// 打开设置面板时，自动将主表单中的 apiUrl 和 apiKey 赋值给设置面板的输入框
+// 打开设置面板
 function openSettingsModal() {
-  settingsApiUrl.value = apiUrl.value;
-  settingsApiKey.value = apiKey.value;
-
-  // 检查云端登录状态
-  const savedCloudUrl = localStorage.getItem('cloudUrl');
-  const savedCloudPassword = localStorage.getItem('cloudPassword');
-  const savedIsCloudLoggedIn = localStorage.getItem('isCloudLoggedIn');
-
-  if (savedIsCloudLoggedIn === 'true' && savedCloudUrl && savedCloudPassword) {
-    cloudUrl.value = savedCloudUrl;
-    cloudPassword.value = savedCloudPassword;
-    isCloudLoggedIn.value = true;
-    cloudAuthHeader = `Bearer ${cloudPassword.value}`;
-    fetchCloudData();
-  }
   showAppSettingsModal.value = true;
 }
 
@@ -2329,397 +2090,9 @@ function closeSettingsModal() {
   }, 0);
 }
 
-// 保存到本地缓存
-function saveToLocal() {
-  // 将设置面板中的值赋回主表单
-  apiUrl.value = settingsApiUrl.value;
-  apiKey.value = settingsApiKey.value;
 
-  // 获取已有的本地缓存列表
-  const existingList = JSON.parse(localStorage.getItem('localCacheList')) || [];
-  //查找是否有相同的 url 和 sk
-  const existingIndex = existingList.findIndex(
-    existingItem =>
-      normalizeUrl(existingItem.url) === normalizeUrl(apiUrl.value) &&
-      existingItem.apiKey.trim() === apiKey.value.trim()
-  );
-  if (existingIndex !== -1) {
-    message.error(t('RECORD_ALREADY_EXISTS'));
-    return;
-  }
-  // 加入时间戳
-  const id = Math.floor(Math.random() * 100);
-  // 创建新的缓存项
-  const newCacheItem = {
-    id: Date.now() + id,
-    url: apiUrl.value,
-    apiKey: apiKey.value,
-    name: `配置 ${existingList.length + 1}`,
-  };
 
-  // 添加新的缓存项到列表
-  existingList.push(newCacheItem);
 
-  // 新本地缓存表
-  localCacheList.value = existingList;
-  localStorage.setItem('localCacheList', JSON.stringify(existingList));
-
-  message.success(t('DATA_SAVED'));
-}
-
-// 导入本地缓存记录
-function loadLocalRecord(id) {
-  const record = localCacheList.value.find(item => item.id === id);
-  if (record) {
-    apiUrl.value = record.url;
-    apiKey.value = record.apiKey;
-    message.success(t('CONFIG_IMPORTED'));
-  }
-}
-
-// 删除本地缓存记录
-function deleteLocalRecord(id) {
-  localCacheList.value = localCacheList.value.filter(item => item.id !== id);
-  localStorage.setItem('localCacheList', JSON.stringify(localCacheList.value));
-  message.success(t('RECORD_DELETED'));
-}
-
-// 导出本地缓存
-function exportLocalCache() {
-  // 导出的数据仅包含 url 和 sk
-  const dataToExport = localCacheList.value.map(item => ({
-    url: item.url,
-    sk: item.apiKey,
-  }));
-  const dataStr = JSON.stringify(dataToExport, null, 2);
-  const blob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'api-check-local.json'; // 修改文件名
-  link.click();
-  URL.revokeObjectURL(url);
-  message.success(t('DATA_EXPORTED'));
-}
-
-// 导入本地缓存
-function importLocalCache() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'application/json';
-  input.onchange = e => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = event => {
-      try {
-        const importedData = JSON.parse(event.target.result);
-        // 将 importedData 规范为数组形式，方便统一处理
-        const dataArray = Array.isArray(importedData)
-          ? importedData
-          : [importedData];
-
-        dataArray.forEach(item => {
-          // 兼容不同的字段名
-          const importedUrl = normalizeUrl(item.url || item.apiUrl || '');
-          const importedApiKey = (item.sk || item.apiKey || '').trim();
-          if (!importedUrl || !importedApiKey) {
-            // 如果缺少必要的字段，跳过该项
-            return;
-          }
-          // 查找是否有相同的 url 和 apiKey
-          const existingIndex = localCacheList.value.findIndex(
-            existingItem =>
-              normalizeUrl(existingItem.url) === importedUrl &&
-              existingItem.apiKey.trim() === importedApiKey
-          );
-
-          // 随机两位数字
-          const id = Date.now() + Math.floor(Math.random() * 100);
-          const newItem = {
-            id: id,
-            url: importedUrl,
-            apiKey: importedApiKey,
-            name: `导入的配置 ${localCacheList.value.length + 1}`,
-          };
-
-          if (existingIndex !== -1) {
-            // 存在相同的配置，进行覆盖
-            localCacheList.value[existingIndex] = newItem;
-          } else {
-            // 不存在，添加新的配置
-            localCacheList.value.push(newItem);
-          }
-        });
-
-        localStorage.setItem(
-          'localCacheList',
-          JSON.stringify(localCacheList.value)
-        );
-        message.success(t('DATA_IMPORTED'));
-      } catch (error) {
-        message.error(t('IMPORT_PARSE_ERROR'));
-        console.error(error);
-      }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
-
-function normalizeUrl(url) {
-  return url.replace(/\/+$/, '').toLowerCase();
-}
-
-// 处理云端登录
-async function handleCloudLogin() {
-  if (!cloudUrl.value || !cloudPassword.value) {
-    message.error(t('PLEASE_ENTER_CLOUD_URL_AND_PASSWORD'));
-    return;
-  }
-  try {
-    // 向 /auth 接口发送 POST 请求
-    const response = await fetch(`${cloudUrl.value}/auth`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: cloudPassword.value }),
-    });
-    if (response.ok) {
-      isCloudLoggedIn.value = true;
-      cloudAuthHeader = `Bearer ${cloudPassword.value}`;
-      message.success(t('CLOUD_LOGIN_SUCCESS'));
-      // 登录后，获取云端数据
-      await fetchCloudData();
-
-      // 保存登录信息到 localStorage
-      localStorage.setItem('cloudUrl', cloudUrl.value);
-      localStorage.setItem('cloudPassword', cloudPassword.value);
-      localStorage.setItem('isCloudLoggedIn', 'true');
-    } else {
-      message.error(t('CLOUD_LOGIN_FAILED'));
-    }
-  } catch (error) {
-    message.error(t('CLOUD_LOGIN_ERROR'));
-    console.error(error);
-  }
-}
-
-// 处理云端登出
-function handleCloudLogout() {
-  isCloudLoggedIn.value = false;
-  cloudPassword.value = '';
-  cloudAuthHeader = '';
-  cloudDataList.value = [];
-  localStorage.removeItem('cloudUrl');
-  localStorage.removeItem('cloudPassword');
-  localStorage.removeItem('isCloudLoggedIn');
-}
-
-// 获取云端数据
-async function fetchCloudData() {
-  if (!isCloudLoggedIn.value) {
-    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
-    return;
-  }
-  try {
-    const response = await fetch(cloudUrl.value, {
-      headers: { Authorization: cloudAuthHeader },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      // 将数据转换为与本地缓存一致的格式
-      cloudDataList.value = data.map((item, index) => ({
-        id: Date.now() + index,
-        url: item.url,
-        apiKey: item.apiKey,
-        name: item.name || `配置 ${index + 1}`,
-        // 移除 description 字段，直接在渲染时显示更多信息
-      }));
-      message.success(t('CLOUD_DATA_LOADED'));
-    } else {
-      message.error(t('CLOUD_DATA_LOAD_FAILED'));
-    }
-  } catch (error) {
-    message.error(t('CLOUD_DATA_LOAD_ERROR'));
-    console.error(error);
-  }
-}
-
-// 保存数据到云端
-async function saveToCloud() {
-  if (!isCloudLoggedIn.value) {
-    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
-    return;
-  }
-  try {
-    const response = await fetch(cloudUrl.value, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: cloudAuthHeader,
-      },
-      body: JSON.stringify(cloudDataList.value),
-    });
-    if (response.ok) {
-      message.success(t('DATA_SAVED_TO_CLOUD'));
-    } else {
-      message.error(t('DATA_SAVE_TO_CLOUD_FAILED'));
-    }
-  } catch (error) {
-    message.error(t('DATA_SAVE_TO_CLOUD_ERROR'));
-    console.error(error);
-  }
-}
-
-// 确认保存数据到云端
-function confirmSaveCloudData() {
-  Modal.confirm({
-    title: t('CONFIRM_SAVE'),
-    content: t('CONFIRM_SAVE_PROMPT'),
-    okText: t('OK'),
-    cancelText: t('CANCEL'),
-    onOk() {
-      saveToCloud();
-    },
-  });
-}
-
-// 导入云端缓存记录
-function loadCloudRecord(id) {
-  const record = cloudDataList.value.find(item => item.id === id);
-  if (record) {
-    apiUrl.value = record.url;
-    apiKey.value = record.apiKey;
-    message.success(t('CONFIG_IMPORTED'));
-  }
-}
-
-// 删除云端记录
-function deleteCloudRecord(id) {
-  cloudDataList.value = cloudDataList.value.filter(item => item.id !== id);
-  message.success(t('RECORD_DELETED_PLEASE_SAVE'));
-}
-
-// 导出云端缓存
-function exportCloudCache() {
-  const dataToExport = cloudDataList.value.map(item => ({
-    url: item.url,
-    sk: item.apiKey,
-  }));
-  const dataStr = JSON.stringify(dataToExport, null, 2);
-  const blob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'api-check-cloud.json'; // 修改文件名
-  link.click();
-  URL.revokeObjectURL(url);
-  message.success(t('DATA_EXPORTED'));
-}
-
-// 导入云端缓存
-function importCloudCache() {
-  if (!isCloudLoggedIn.value) {
-    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
-    return;
-  }
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'application/json';
-  input.onchange = e => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = event => {
-      try {
-        const importedData = JSON.parse(event.target.result);
-        // 将 importedData 规范为数组形式，方便统一处理
-        const dataArray = Array.isArray(importedData)
-          ? importedData
-          : [importedData];
-
-        dataArray.forEach(item => {
-          // 兼容不同的字段名
-          const importedUrl = normalizeUrl(item.url || item.apiUrl || '');
-          const importedApiKey = (item.sk || item.apiKey || '').trim();
-
-          if (!importedUrl || !importedApiKey) {
-            // 如果缺少必要的字段，跳过该项
-            return;
-          }
-          // 查找是否有相同的 url 和 apiKey
-          const existingIndex = cloudDataList.value.findIndex(
-            existingItem =>
-              normalizeUrl(existingItem.url) === importedUrl &&
-              existingItem.apiKey.trim() === importedApiKey
-          );
-          // 随机两位数字
-          const id = Date.now() + Math.floor(Math.random() * 100);
-
-          const newItem = {
-            id: id,
-            url: importedUrl,
-            apiKey: importedApiKey,
-            name: `导入的配置 ${cloudDataList.value.length + 1}`,
-          };
-
-          if (existingIndex !== -1) {
-            // 存在相同的配置，进行覆盖
-            cloudDataList.value[existingIndex] = newItem;
-          } else {
-            // 不存在，添加新的配置
-            cloudDataList.value.push(newItem);
-          }
-        });
-
-        message.success(t('DATA_IMPORTED_PLEASE_SAVE'));
-      } catch (error) {
-        message.error(t('IMPORT_PARSE_ERROR'));
-        console.error(error);
-      }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
-
-// 页面加载时尝试读取本地缓存
-onMounted(() => {
-  // 尝试读取本地缓存列表
-  const savedLocalDataList = localStorage.getItem('localCacheList');
-  if (savedLocalDataList) {
-    localCacheList.value = JSON.parse(savedLocalDataList);
-  } else {
-    localCacheList.value = [];
-  }
-
-  // 检查云端登录状态
-  const savedCloudUrl = localStorage.getItem('cloudUrl');
-  const savedCloudPassword = localStorage.getItem('cloudPassword');
-  const savedIsCloudLoggedIn = localStorage.getItem('isCloudLoggedIn');
-
-  if (savedIsCloudLoggedIn === 'true' && savedCloudUrl && savedCloudPassword) {
-    cloudUrl.value = savedCloudUrl;
-    cloudPassword.value = savedCloudPassword;
-    isCloudLoggedIn.value = true;
-    cloudAuthHeader = `Bearer ${cloudPassword.value}`;
-    // 自动获取云端数据
-    fetchCloudData();
-  }
-});
-
-// goChat
-function goChat(modelName) {
-  // 模拟获取模型并打印数据
-  if (!apiKey.value || !apiUrl.value) {
-    message.error('请先填写 API Key 和 API URL');
-    return;
-  }
-  //判断是否有modelName 没有就不给url 传值
-  let url = `${chatSite.value}/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
-  if (modelName) {
-    url = `${chatSite.value}/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}","model":"${modelName}"}`;
-  }
-  window.open(url);
-}
 
 function goShare() {
   // 生成 SVG Data URL
