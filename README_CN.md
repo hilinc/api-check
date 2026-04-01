@@ -5,8 +5,7 @@
 
 </div>
 
-> [!TIP]
-> 点击体验 : https://check.crond.dev
+> 点击体验 : https://api-check-indol.vercel.app
 
 ## 纯前端 API 检测工具
 
@@ -22,10 +21,10 @@
 
   - 显示响应时间、模型一致性等信息，测试结果一目了然。
 
-- 💾 **云端存储与本地存储**
+- 💾 **无痕与密码管理器支持 (安全加固版)**
 
-  - **云端存储**：配置可保存至云端，实现多设备共享。
-  - **本地存储**：常用配置本地保存，快速加载，方便快捷。
+  - **移除云端与本地缓存泄漏点**：配置不再以明文形式缓存在本地或发向云端。
+  - **原生密码管理器集成**：通过标准的表单 autocomplete 完美兼容主流的 1Password / iCloud Keychain 等原生密码保险箱，自动回填你的 API Key。
 
 - 🌙 **主题和语言切换**
 
@@ -41,8 +40,7 @@
 
 ### vercel 部署
 
-1. 点击右侧按钮开始部署：
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check)，直接使用 Github 账号登录即可，记得在环境变量页填入 后端密码；
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hilinc/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check)，直接使用 Github 账号登录即可，记得在环境变量页填入后端密码；
 2. 部署完毕后，即可开始使用；
 3. （可选）部署后端服务 请参考 [详细教程](./docs/vercel.md)。
 4. （可选）[绑定自定义域名](https://vercel.com/docs/concepts/projects/domains/add-a-domain)：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
@@ -71,9 +69,8 @@
 
 🔔 **新特性与优化**
 
-- ✨ **新增快捷聊天测试**
-  - 对接魔改 NextChat，可快捷测试模型。
-  - 新增 `closeChat` 设置，方便中转站使用。
+- ✨ **安全优化：彻底移除聊天功能**
+  - 不再提供极易泄漏 Key 给第三方的快捷聊天入口，确保只做校验本职工作。
 - 🧪 **添加实验性功能模块** from [elfmaid](https://linux.do/u/elfmaid)
   - 批量测试 gpt Refresh Tokens
   - 批量测试 claude Session Keys
@@ -92,10 +89,9 @@
 
 🔔 **全新特性与优化**
 
-- 🌐 **新增云端存储和本地存储功能**
-  - **云端存储**：支持将 API 配置信息保存到云端服务器，实现多设备同步，随时随地访问您的配置。
-  - **本地存储**：提供本地缓存功能，快捷保存到本地，避免重复输入，提高使用效率。
-  - **数据管理**：新增设置面板，方便管理本地和云端的配置数据。
+- 🌐 **移除传统的明文云端存储/本地存储**
+  - **系统级集成**：基于浏览器的 autofill 让系统的密码管理器（如各大浏览器内置功能/macOS 钥匙串等）接管输入框。
+  - **安全极客专属**：移除设置面板所有储存功能，防止任何恶意跳转链接窃取配置数据。
 - ✨**支持预设参数**
   - **一键配置方便**
   - **快速绑定到 new-api**
@@ -149,7 +145,7 @@
 - 📋 获取并显示可用模型列表
 - 📝 智能提取API信息
 - 🖱️ 便捷的复制功能
-- 💾 云端存储和本地缓存
+- 💾 密码管理器无缝支持
 - 🌙 主题和语言切换
 - 🛠 高级验证功能
 
@@ -157,83 +153,7 @@
   - **温度验证**：验证模型的随机性和稳定性。
   - **函数调用验证**：测试模型的函数调用能力。
 
-### 🛠 云端存储
-
-- **Docker 部署** 后端url 请使用 https://your_website/api
-- **Vercel 部署** 后端url 请使用 https://your_website/api
-- **Cloudflare 部署** 后端url 请使用 https://your_website
-
-### 🛠 预设参数设置
-
-<img src="./docs/images/config.png" alt="上测试报告" style="zoom:50%;" />
-
-🔗 url
-
-- **描述**: API 接口地址。
-- **示例**: `"url": "https://api.example.com"`
-
-📦 models
-
-- **描述**: 模型名称数组，表示可以使用的模型。
-- **示例**: `"models": ["model1", "model2"]`
-
-⏱ timeout
-
-- **描述**: 请求超时时间（以秒为单位）。
-- **示例**: `"timeout": 30`
-
-🔁 concurrency
-
-- **描述**: 并发请求的数量。
-- **示例**: `"concurrency": 5`
-
-🚫 closeAnnouncement **方便中转站使用**
-
-- **描述**: 是否关闭公告显示。设置为 `true` 时关闭公告显示，设置为 `false` 或未定义时显示公告。 **方便中转站使用**
-- **示例**: `"closeAnnouncement": true`
-
-🚪 closeChat **方便中转站使用**
-
-- **描述**：是否关闭快捷聊天功能。设置为 `true` 时关闭聊天功能，设置为 `false` 或未定义时开启聊天功能。
-- **示例**：`"closeChat": true`
-
-```
-https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-mini","gpt-4o"],"timeout":10,"concurrency":2,"closeAnnouncement":true,"closeChat":true}
-```
-
-解码后的 JSON 字符串如下：
-
-```json
-{
-  "key": "your_api_key",
-  "url": "https://api.example.com",
-  "models": ["gpt-4o-mini", "gpt-4o"],
-  "timeout": 10,
-  "concurrency": 2,
-  "closeAnnouncement": true,
-  "closeChat": true
-}
-```
-
-- **voapi** 示例
-
-```
-{
-  "name": "check",
-  "link": "https://check.crond.dev/?settings={%22key%22:%22*sk*%22,%22url%22:%22*api*%22,%22models%22:[%22gpt-4o-mini%22],%22timeout%22:10,%22concurrency%22:2,%22closeAnnouncement%22:true,%22closeChat%22:true}",
-  "icon": "https://check.crond.dev/logo.png"
-}
-
-```
-
-- **newapi** 示例
-
-```
-{
-  "CHECK": "https://check.crond.dev/?settings={\"key\":\"{key}\",\"url\":\"{address}\",\"models\":[\"gpt-4o-mini\"],\"timeout\":10,\"concurrency\":2,\"closeAnnouncement\":true,\"closeChat\":true}"
-}
-
-```
+[删除了之前不安全的云储存相关配置及分享链接介绍]
 
 ### 🛠 **高级验证功能**
 
@@ -273,4 +193,4 @@ https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=october-coder/api-check&type=Date)](https://star-history.com/#october-coder/api-check&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=hilinc/api-check&type=Date)](https://star-history.com/#hilinc/api-check&Date)

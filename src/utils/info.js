@@ -36,7 +36,7 @@ export const appInfo = {
       desc: '最好的机场',
     },
   ],
-  updateLogUrl: 'https://github.com/october-coder/api-check/releases',
+  updateLogUrl: 'https://github.com/hilinc/api-check/releases',
   contributors: [
     {
       name: 'rick',
@@ -63,12 +63,12 @@ export const appInfo = {
   ],
   company: 'rick & megasoft', // 公司名称
   year: '2024', // 年份
-  website: 'check.crond.dev',
-  officialUrl: 'https://check.crond.dev',
+  website: 'api-check-indol.vercel.app',
+  officialUrl: 'https://api-check-indol.vercel.app',
   license: 'Apache', // 许可证,
-  changelogUrl: 'https://github.com/october-coder/api-check/releases',
-  githubUrl: 'https://github.com/october-coder/api-check',
-  owner: 'october-coder',
+  changelogUrl: 'https://github.com/hilinc/api-check/releases',
+  githubUrl: 'https://github.com/hilinc/api-check',
+  owner: 'hilinc',
   repo: 'api-check',
 };
 
@@ -87,11 +87,11 @@ export const announcement = {
   content: {
     zh: [
       '🎉 欢迎使用 API CHECK，一个纯前端 OpenAI API 检测工具',
-      '启用新域名: https://check.crond.dev',
+      '启用新域名: https://api-check-indol.vercel.app',
     ],
     en: [
       '🎉 Welcome to API CHECK, a pure front-end OpenAI API testing tool',
-      'New domain: https://check.crond.dev',
+      'New domain: https://api-check-indol.vercel.app',
     ],
   },
   officialContent: {
@@ -154,7 +154,7 @@ export const announcement = {
         version: 'v1.5',
         date: '2024-11-10',
         content: [
-          '新域名 ：https://check.crond.dev',
+          '新域名 ：https://api-check-indol.vercel.app',
           '新增：黑暗模式',
           '优化：优化前端交互体验',
         ],
@@ -194,7 +194,7 @@ export const announcement = {
         version: 'v1.5',
         date: '2024-11-10',
         content: [
-          'New domain: https://check.crond.dev',
+          'New domain: https://api-check-indol.vercel.app',
           'New: Dark mode',
           'Optimization: Optimize front-end interactive experience',
         ],
@@ -222,7 +222,7 @@ export const announcement = {
     ],
   },
   url: {
-    githubUrl: 'https://github.com/october-coder/api-check',
-    officialUrl: 'https://check.crond.dev',
+    githubUrl: 'https://github.com/hilinc/api-check',
+    officialUrl: 'https://api-check-indol.vercel.app',
   },
 };

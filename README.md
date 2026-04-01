@@ -7,8 +7,7 @@
 
 **English** · [简体中文](./README_CN.md)
 
-> [!TIP]
-> Click to try: https://check.crond.dev
+> Click to try: https://api-check-indol.vercel.app
 
 ## Pure Front-End API Testing Tool
 
@@ -24,10 +23,10 @@
 
   - Displays response time, model consistency, and more, making test results clear at a glance.
 
-- 💾 **Cloud Storage and Local Storage**
+- 💾 **Stateless & Password Manager Support (Secured)**
 
-  - **Cloud Storage**: Save configurations to the cloud for multi-device sharing.
-  - **Local Storage**: Save frequently used configurations locally for quick loading and convenience.
+  - **Removed Local/Cloud Leakage**: Configurations are no longer cached locally in plaintext or sent to the cloud.
+  - **Native OS Integration**: Fully leverages OS and browser's native password managers (1Password, iCloud Keychain) to securely autofill your API credentials via standard form attributes.
 
 - 🌙 **Theme and Language Switching**
 
@@ -43,8 +42,7 @@
 
 ### Vercel Deployment
 
-1. Click the button on the right to start deployment:
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check). Simply log in using your GitHub account, and remember to fill in the backend password on the environment variables page.
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hilinc/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check). Simply log in using your GitHub account, and remember to fill in the backend password on the environment variables page.
 2. After deployment, you can start using it.
 3. (Optional) To deploy the backend service, please refer to the [Detailed Tutorial](./docs/vercel.md).
 4. (Optional) [Bind a Custom Domain Name](https://vercel.com/docs/concepts/projects/domains/add-a-domain): The domain name assigned by Vercel may be polluted in some regions. Binding a custom domain name allows direct access.
@@ -73,9 +71,8 @@
 
 🔔 **New Features and Optimizations**
 
-- ✨ **Added Quick Chat Testing**
-  - Integrated with the modified NextChat for quick model testing.
-  - Added `closeChat` setting for convenient proxy usage.
+- ✨ **Added Quick Chat Testing** (Removed in the high-security fork branch)
+  - Safely removed the Chat functionality to prevent malicious credential sharing.
 - 🧪 **Added Experimental Features Module** from [elfmaid](https://linux.do/u/elfmaid)
   - Batch testing of GPT Refresh Tokens
   - Batch testing of Claude Session Keys
@@ -93,10 +90,9 @@
 
 🔔 **Brand New Features and Optimizations**
 
-- 🌐 **Added Cloud Storage and Local Storage**
-  - **Cloud Storage**: Supports saving API configuration information to the cloud server for multi-device synchronization, allowing you to access your configurations anytime, anywhere.
-  - **Local Storage**: Provides a local caching function for quick local saves, avoiding repeated inputs and improving efficiency.
-  - **Data Management**: Added a settings panel for easy management of local and cloud configuration data.
+- 🌐 **Removed Legacy Plaintext Local/Cloud Storage**
+  - **OS-level Integration**: Form bindings use autofill strategies letting your device's built-in password management tools handle configs.
+  - **Security Focused**: Removed vulnerable URL params injection logic and sync features to defend against phishing and XSS links.
 - ✨ **Supports Preset Parameters**
   - **Convenient One-Click Configuration**
   - **Quickly Bind to new-api**
@@ -151,7 +147,7 @@
 - 📋 Retrieve and display the list of available models
 - 📝 Intelligent extraction of API information
 - 🖱️ Convenient copy function
-- 💾 Cloud storage and local caching
+- 💾 Password Manager OS-native support
 - 🌙 Theme and language switching
 - 🛠 Advanced Verification Features
 
@@ -163,78 +159,6 @@
 
 - **Docker Deployment** backend URL: Please use `https://your_website/api`
 - **Vercel Deployment** backend URL: Please use `https://your_website/api`
-- **Cloudflare Deployment** backend URL: Please use `https://your_website`
-
-### 🛠 Preset Parameter Settings
-
-<img src="./docs/images/config.png" alt="Test Report" style="zoom:50%;" />
-
-🔗 url
-
-- **Description**: API endpoint address.
-- **Example**: `"url": "https://api.example.com"`
-
-📦 models
-
-- **Description**: An array of model names indicating which models are available.
-- **Example**: `"models": ["model1", "model2"]`
-
-⏱ timeout
-
-- **Description**: Request timeout in seconds.
-- **Example**: `"timeout": 30`
-
-🔁 concurrency
-
-- **Description**: Number of concurrent requests.
-- **Example**: `"concurrency": 5`
-
-🚫 closeAnnouncement **Convenient for Proxy Sites**
-
-- **Description**: Whether to disable the announcement display. Set to `true` to disable, or `false`/undefined to display announcements. **Convenient for proxy sites**
-- **Example**: `"closeAnnouncement": true`
-
-🚪 closeChat **Convenient for Proxy Sites**
-
-- **Description**: Whether to disable the quick chat function. Set to `true` to disable, or `false`/undefined to enable the chat function.
-- **Example**: `"closeChat": true`
-
-```url
-https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-mini","gpt-4o"],"timeout":10,"concurrency":2,"closeAnnouncement":true,"closeChat":true}
-```
-
-Decoded JSON string:
-
-```json
-{
-  "key": "your_api_key",
-  "url": "https://api.example.com",
-  "models": ["gpt-4o-mini", "gpt-4o"],
-  "timeout": 10,
-  "concurrency": 2,
-  "closeAnnouncement": true,
-  "closeChat": true
-}
-```
-
-- **voapi** Example
-
-```json
-{
-  "name": "check",
-  "link": "https://check.crond.dev/?settings={%22key%22:%22*sk*%22,%22url%22:%22*api*%22,%22models%22:[%22gpt-4o-mini%22],%22timeout%22:10,%22concurrency%22:2,%22closeAnnouncement%22:true,%22closeChat%22:true}",
-  "icon": "https://check.crond.dev/logo.png"
-}
-```
-
-- **newapi** Example
-
-```json
-{
-  "CHECK": "https://check.crond.dev/?settings={\"key\":\"{key}\",\"url\":\"{address}\",\"models\":[\"gpt-4o-mini\"],\"timeout\":10,\"concurrency\":2,\"closeAnnouncement\":true,\"closeChat\":true}"
-}
-```
-
 ### 🛠 **Advanced Verification Features**
 
 #### 🕵️ Official API Verification
@@ -273,7 +197,7 @@ Special thanks to the following contributors whose efforts have made this projec
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=october-coder/api-check&type=Date)](https://star-history.com/#october-coder/api-check&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=hilinc/api-check&type=Date)](https://star-history.com/#hilinc/api-check&Date)
 
 [![image](iframe组件截图图片链接)](https://yxvm.com/)
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
